@@ -9,9 +9,9 @@ const navItems = [
 ];
 ---
 
-<header style="max-width: 760px; margin: 0 auto; position: relative;">
+<header style="max-width: 1080px; margin: 0 auto; position: relative; z-index: 1;">
   <div
-    style="padding: 24px 24px 14px; display: flex; justify-content: space-between; align-items: center;"
+    style="padding: 26px 32px 16px; display: flex; justify-content: space-between; align-items: center;"
   >
     <a href="/" style="display: flex; align-items: center; gap: 12px;">
       <span style="color: var(--color-text-primary);">
@@ -26,7 +26,7 @@ const navItems = [
         </span>
       </div>
     </a>
-    <nav class="mono" style="display: flex; gap: 22px; font-size: 12px; color: var(--color-text-secondary);">
+    <nav class="mono" style="display: flex; gap: 24px; font-size: 12px; color: var(--color-text-secondary);">
       {navItems.map((item) => <a href={item.href}>{item.label}</a>)}
     </nav>
   </div>

@@ -24,12 +24,12 @@ const iconMap: Record<string, any> = {
 };
 ---
 
-<section style="padding: 28px 24px 14px; max-width: 760px; margin: 0 auto;">
+<section style="padding: 32px 32px 18px; max-width: 1080px; margin: 0 auto;">
   {
     showHeading && (
-      <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 18px; padding-top: 10px; border-top: 0.5px solid var(--color-border);">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 22px; padding-top: 14px; border-top: 0.5px solid var(--color-border);">
         <div>
-          <span class="serif" style="font-size: 18px; font-weight: 500;">
+          <span class="serif" style="font-size: 20px; font-weight: 500;">
             장르 / Genres
           </span>
           <span class="mono" style="font-size: 11px; color: var(--color-text-faded); margin-left: 12px;">
@@ -39,7 +39,7 @@ const iconMap: Record<string, any> = {
       </div>
     )
   }
-  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px;">
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px;">
     {
       genres.map((g) => {
         const Icon = iconMap[g.instrument] || JanguIcon;
@@ -48,32 +48,32 @@ const iconMap: Record<string, any> = {
           <a
             href={`/genre/${g.slug}`}
             class="genre-card-active"
-            style="background: rgba(22, 18, 31, 0.6); backdrop-filter: blur(4px); border: 0.5px solid var(--color-border-strong); padding: 16px 14px; position: relative; display: block; transition: all 0.2s;"
+            style="background: rgba(22, 18, 31, 0.6); backdrop-filter: blur(4px); border: 0.5px solid var(--color-border-strong); padding: 18px 16px; position: relative; display: block; transition: all 0.2s;"
           >
-            <div style="margin-bottom: 10px; color: var(--color-text-primary);">
-              <Icon size={28} />
+            <div style="margin-bottom: 12px; color: var(--color-text-primary);">
+              <Icon size={30} />
             </div>
-            <div class="serif" style="font-size: 16px; font-weight: 500; line-height: 1.2; color: var(--color-text-primary);">
+            <div class="serif" style="font-size: 17px; font-weight: 500; line-height: 1.2; color: var(--color-text-primary);">
               {g.instrument_label_ko}
             </div>
-            <div class="mono" style="font-size: 11px; color: var(--color-text-faded); margin-top: 2px;">
+            <div class="mono" style="font-size: 11px; color: var(--color-text-faded); margin-top: 3px;">
               {g.label} · {g.track_count}
             </div>
             <div
-              style="position: absolute; top: 12px; right: 12px; width: 6px; height: 6px; background: var(--color-dancheong-red); border-radius: 50%; box-shadow: 0 0 10px rgba(232, 72, 82, 0.7);"
+              style="position: absolute; top: 14px; right: 14px; width: 6px; height: 6px; background: var(--color-dancheong-red); border-radius: 50%; box-shadow: 0 0 10px rgba(232, 72, 82, 0.7);"
             />
           </a>
         ) : (
           <div
-            style="background: rgba(22, 18, 31, 0.4); border: 0.5px solid var(--color-border); padding: 16px 14px; opacity: 0.5;"
+            style="background: rgba(22, 18, 31, 0.4); border: 0.5px solid var(--color-border); padding: 18px 16px; opacity: 0.5;"
           >
-            <div style="margin-bottom: 10px; color: var(--color-text-secondary);">
-              <Icon size={28} />
+            <div style="margin-bottom: 12px; color: var(--color-text-secondary);">
+              <Icon size={30} />
             </div>
-            <div class="serif" style="font-size: 16px; font-weight: 500; line-height: 1.2;">
+            <div class="serif" style="font-size: 17px; font-weight: 500; line-height: 1.2;">
               {g.instrument_label_ko}
             </div>
-            <div class="mono" style="font-size: 11px; color: var(--color-text-faded); margin-top: 2px;">
+            <div class="mono" style="font-size: 11px; color: var(--color-text-faded); margin-top: 3px;">
               {g.label} · soon
             </div>
           </div>
