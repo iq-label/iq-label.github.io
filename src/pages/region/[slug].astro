@@ -21,6 +21,8 @@ const instrumentsWithTracks = region.instruments.map((inst) => {
   );
   return { ...inst, track };
 });
+
+const activeCount = instrumentsWithTracks.filter((i) => i.track).length;
 ---
 
 <Layout title={`${region.label} · Label Q`}>
@@ -42,9 +44,22 @@ const instrumentsWithTracks = region.instruments.map((inst) => {
       <div class="region-meta">
         <span>{region.instruments.length} instruments</span>
         <span class="meta-sep">·</span>
-        <span>{instrumentsWithTracks.filter(i => i.track).length} active</span>
+        {region.active ? (
+          <span class="active-stat">{activeCount} active</span>
+        ) : (
+          <span class="preview-stat">PREVIEW · 첫 트랙 준비 중</span>
+        )}
       </div>
     </header>
+
+    {!region.active && (
+      <div class="preview-banner">
+        <span class="preview-banner-tag">◈ PREVIEW</span>
+        <span class="preview-banner-text">
+          이 지역은 아직 발행 전입니다. 아래는 등장 예정인 악기들과 각자의 default 장르 매핑입니다.
+        </span>
+      </div>
+    )}
 
     <div class="instrument-grid">
       {instrumentsWithTracks.map((inst) => {
@@ -94,7 +109,7 @@ const instrumentsWithTracks = region.instruments.map((inst) => {
   }
 
   .page-header {
-    margin-bottom: 56px;
+    margin-bottom: 36px;
   }
 
   .back-link {
@@ -170,6 +185,42 @@ const instrumentsWithTracks = region.instruments.map((inst) => {
 
   .meta-sep {
     color: var(--color-text-dim);
+  }
+
+  .active-stat {
+    color: var(--color-dancheong-red);
+  }
+
+  .preview-stat {
+    color: var(--color-stardust-gold);
+  }
+
+  .preview-banner {
+    margin-bottom: 32px;
+    padding: 16px 22px;
+    border: 0.5px solid var(--color-border);
+    background: rgba(22, 18, 31, 0.5);
+    backdrop-filter: blur(4px);
+    border-left: 2px solid var(--color-stardust-gold);
+    display: flex;
+    gap: 18px;
+    align-items: baseline;
+    flex-wrap: wrap;
+  }
+
+  .preview-banner-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--color-stardust-gold);
+    letter-spacing: 0.18em;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+
+  .preview-banner-text {
+    font-size: 13.5px;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
   }
 
   .instrument-grid {
@@ -301,6 +352,10 @@ const instrumentsWithTracks = region.instruments.map((inst) => {
     }
     .instrument-grid {
       grid-template-columns: 1fr 1fr;
+    }
+    .preview-banner {
+      flex-direction: column;
+      gap: 6px;
     }
   }
 </style>

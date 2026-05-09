@@ -20,8 +20,11 @@ const regions = regionsData;
     <div class="region-grid">
       {regions.map((region) => {
         const totalTracks = region.instruments.reduce((sum, i) => sum + i.track_count, 0);
-        const cardContent = (
-          <Fragment>
+        return (
+          <a
+            href={`/region/${region.slug}`}
+            class={`region-card ${region.active ? 'region-active' : 'region-coming'}`}
+          >
             <div class="region-num">{region.number}</div>
             <div class="region-name-block">
               <div class="region-label">{region.label}</div>
@@ -39,19 +42,10 @@ const regions = regionsData;
               <span class="track-stat">
                 {region.active ? `${totalTracks} track` : 'soon'}
               </span>
+              <span class="enter-arrow" aria-hidden="true">→</span>
             </div>
             {region.active && <div class="active-dot" aria-hidden="true"></div>}
-          </Fragment>
-        );
-
-        return region.active ? (
-          <a href={`/region/${region.slug}`} class="region-card region-active">
-            {cardContent}
           </a>
-        ) : (
-          <div class="region-card region-coming">
-            {cardContent}
-          </div>
         );
       })}
     </div>
@@ -104,24 +98,43 @@ const regions = regionsData;
     border: 0.5px solid var(--color-border);
     background: rgba(22, 18, 31, 0.5);
     backdrop-filter: blur(4px);
-    transition: all 0.2s;
+    transition: all 0.25s;
     display: block;
+    cursor: pointer;
   }
 
+  /* Active region: bright, dancheong red accent */
   .region-active {
     border-color: var(--color-border-strong);
     background: rgba(22, 18, 31, 0.7);
-    cursor: pointer;
   }
 
   .region-active:hover {
     border-color: var(--color-dancheong-red);
     box-shadow: 0 0 28px rgba(232, 72, 82, 0.15);
-    transform: translateY(-1px);
+    transform: translateY(-2px);
   }
 
+  .region-active:hover .enter-arrow {
+    color: var(--color-dancheong-red);
+    transform: translateX(4px);
+  }
+
+  /* Coming region: muted but still clickable, gentler hover */
   .region-coming {
-    opacity: 0.55;
+    opacity: 0.7;
+  }
+
+  .region-coming:hover {
+    opacity: 1;
+    border-color: var(--color-text-secondary);
+    background: rgba(22, 18, 31, 0.7);
+    transform: translateY(-2px);
+  }
+
+  .region-coming:hover .enter-arrow {
+    color: var(--color-text-primary);
+    transform: translateX(4px);
   }
 
   .region-num {
@@ -192,6 +205,13 @@ const regions = regionsData;
 
   .dot-sep {
     color: var(--color-text-dim);
+  }
+
+  .enter-arrow {
+    margin-left: auto;
+    color: var(--color-text-faded);
+    font-size: 14px;
+    transition: all 0.25s;
   }
 
   .active-dot {
