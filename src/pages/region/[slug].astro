@@ -15,14 +15,20 @@ export async function getStaticPaths() {
 const { region } = Astro.props;
 const tracks = tracksData as Track[];
 
-const instrumentsWithTracks = region.instruments.map((inst) => {
-  const track = tracks.find(
-    (t) => t.fusion_instrument === inst.id && t.genre === inst.default_genre,
-  );
-  return { ...inst, track };
+// Track-driven status per instrument
+const instrumentsWithStatus = region.instruments.map((inst) => {
+  const matchingTracks = tracks.filter((t) => t.fusion_instrument === inst.id);
+  const track = matchingTracks[0];
+  return {
+    ...inst,
+    track,
+    track_count: matchingTracks.length,
+    display_genre: track ? track.genre : inst.default_genre,
+  };
 });
 
-const activeCount = instrumentsWithTracks.filter((i) => i.track).length;
+const activeCount = instrumentsWithStatus.filter((i) => i.track).length;
+const regionIsActive = activeCount > 0;
 ---
 
 <Layout title={`${region.label} · Label Q`}>
@@ -44,7 +50,7 @@ const activeCount = instrumentsWithTracks.filter((i) => i.track).length;
       <div class="region-meta">
         <span>{region.instruments.length} instruments</span>
         <span class="meta-sep">·</span>
-        {region.active ? (
+        {regionIsActive ? (
           <span class="active-stat">{activeCount} active</span>
         ) : (
           <span class="preview-stat">PREVIEW · 첫 트랙 준비 중</span>
@@ -52,7 +58,7 @@ const activeCount = instrumentsWithTracks.filter((i) => i.track).length;
       </div>
     </header>
 
-    {!region.active && (
+    {!regionIsActive && (
       <div class="preview-banner">
         <span class="preview-banner-tag">◈ PREVIEW</span>
         <span class="preview-banner-text">
@@ -62,7 +68,7 @@ const activeCount = instrumentsWithTracks.filter((i) => i.track).length;
     )}
 
     <div class="instrument-grid">
-      {instrumentsWithTracks.map((inst) => {
+      {instrumentsWithStatus.map((inst) => {
         const flagEmoji = countryToFlag(inst.country);
         const cardContent = (
           <Fragment>
@@ -76,7 +82,7 @@ const activeCount = instrumentsWithTracks.filter((i) => i.track).length;
             </div>
             <div class="genre-line">
               <span class="fusion-op">⊗</span>
-              <span class="genre-name">{inst.default_genre}</span>
+              <span class="genre-name">{inst.display_genre}</span>
               <span class="track-status">
                 {inst.track ? `· ${inst.track_count} track` : '· soon'}
               </span>

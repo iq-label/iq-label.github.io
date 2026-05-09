@@ -1,9 +1,20 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import regionsData from '../../data/regions.json';
+import tracksData from '../../data/tracks.json';
 import { countryToFlag, countryNamesKo } from '../../lib/countries';
+import type { Track } from '../../types';
 
-const regions = regionsData;
+const tracks = tracksData as Track[];
+
+// Derive each region's status from tracks data
+const regions = regionsData.map((region) => {
+  const totalTracks = region.instruments.reduce(
+    (sum, inst) => sum + tracks.filter((t) => t.fusion_instrument === inst.id).length,
+    0,
+  );
+  return { ...region, totalTracks, isActive: totalTracks > 0 };
+});
 ---
 
 <Layout title="Atlas · Label Q">
@@ -18,36 +29,33 @@ const regions = regionsData;
     </header>
 
     <div class="region-grid">
-      {regions.map((region) => {
-        const totalTracks = region.instruments.reduce((sum, i) => sum + i.track_count, 0);
-        return (
-          <a
-            href={`/region/${region.slug}`}
-            class={`region-card ${region.active ? 'region-active' : 'region-coming'}`}
-          >
-            <div class="region-num">{region.number}</div>
-            <div class="region-name-block">
-              <div class="region-label">{region.label}</div>
-              <div class="region-label-ko">{region.label_ko}</div>
-            </div>
-            <div class="region-blurb">{region.blurb}</div>
-            <div class="region-flags">
-              {region.flag_codes.map((code) => (
-                <span class="flag" title={countryNamesKo[code] || code}>{countryToFlag(code)}</span>
-              ))}
-            </div>
-            <div class="region-stats">
-              <span class="instr-count">{region.instruments.length} 악기</span>
-              <span class="dot-sep">·</span>
-              <span class="track-stat">
-                {region.active ? `${totalTracks} track` : 'soon'}
-              </span>
-              <span class="enter-arrow" aria-hidden="true">→</span>
-            </div>
-            {region.active && <div class="active-dot" aria-hidden="true"></div>}
-          </a>
-        );
-      })}
+      {regions.map((region) => (
+        <a
+          href={`/region/${region.slug}`}
+          class={`region-card ${region.isActive ? 'region-active' : 'region-coming'}`}
+        >
+          <div class="region-num">{region.number}</div>
+          <div class="region-name-block">
+            <div class="region-label">{region.label}</div>
+            <div class="region-label-ko">{region.label_ko}</div>
+          </div>
+          <div class="region-blurb">{region.blurb}</div>
+          <div class="region-flags">
+            {region.flag_codes.map((code) => (
+              <span class="flag" title={countryNamesKo[code] || code}>{countryToFlag(code)}</span>
+            ))}
+          </div>
+          <div class="region-stats">
+            <span class="instr-count">{region.instruments.length} 악기</span>
+            <span class="dot-sep">·</span>
+            <span class="track-stat">
+              {region.isActive ? `${region.totalTracks} track` : 'soon'}
+            </span>
+            <span class="enter-arrow" aria-hidden="true">→</span>
+          </div>
+          {region.isActive && <div class="active-dot" aria-hidden="true"></div>}
+        </a>
+      ))}
     </div>
 
   </article>
@@ -103,7 +111,6 @@ const regions = regionsData;
     cursor: pointer;
   }
 
-  /* Active region: bright, dancheong red accent */
   .region-active {
     border-color: var(--color-border-strong);
     background: rgba(22, 18, 31, 0.7);
@@ -120,7 +127,6 @@ const regions = regionsData;
     transform: translateX(4px);
   }
 
-  /* Coming region: muted but still clickable, gentler hover */
   .region-coming {
     opacity: 0.7;
   }
