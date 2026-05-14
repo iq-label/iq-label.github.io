@@ -28,57 +28,142 @@ const InstrumentIcon = iconMap[track.fusion_instrument] || JanguIcon;
 const instrumentLabel = track.fusion_with_label || track.fusion_with;
 ---
 
-<section style="position: relative; padding: 64px 32px 56px; max-width: 1080px; margin: 0 auto;">
-  <div style="position: absolute; top: 28px; right: 32px; pointer-events: none;">
-    <div class="fan-wrap">
-      <IQResonator size={380} />
+<section class="track-hero">
+  <div class="hero-resonator" aria-hidden="true">
+    <div class="resonator-wrap">
+      <IQResonator size={540} />
     </div>
   </div>
 
-  <div class="tag" style="margin-bottom: 28px;">
-    第 {track.number} 號 — LATEST DROP / NO. {track.number}
+  <div class="hero-content">
+    <div class="tag hero-tag">
+      第 {track.number} 號 — LATEST DROP / NO. {track.number}
+    </div>
+
+    <h1 class="serif glow-cream hero-title">
+      <a href={`/track/${track.id}`}>{track.title_ko}</a>
+    </h1>
+
+    <div class="hero-subtitle">
+      {track.title_en}
+    </div>
+
+    <div class="mono hero-meta">
+      <InstrumentIcon size={24} />
+      <span class="serif instrument-label">
+        {instrumentLabel}
+      </span>
+      <span class="fusion-op">⊗</span>
+      <span>{track.genre}</span>
+    </div>
+
+    <button data-track={trackJson}>▶ PLAY · {track.duration_label}</button>
   </div>
-
-  <h1
-    class="serif glow-cream"
-    style="font-size: 64px; font-weight: 500; margin: 0 0 14px; line-height: 1.05; max-width: 600px;"
-  >
-    <a href={`/track/${track.id}`}>{track.title_ko}</a>
-  </h1>
-
-  <div
-    style="font-style: italic; font-size: 17px; color: var(--color-text-secondary); margin-bottom: 32px; max-width: 400px;"
-  >
-    {track.title_en}
-  </div>
-
-  <div
-    class="mono"
-    style="display: flex; align-items: center; gap: 14px; font-size: 14px; color: var(--color-text-secondary); margin-bottom: 32px;"
-  >
-    <InstrumentIcon size={24} />
-    <span class="serif" style="font-size: 15px; letter-spacing: 0; color: var(--color-text-primary);">
-      {instrumentLabel}
-    </span>
-    <span class="fusion-op">⊗</span>
-    <span>{track.genre}</span>
-  </div>
-
-  <button data-track={trackJson}>▶ PLAY · {track.duration_label}</button>
 </section>
 
 <style>
+  .track-hero {
+    position: relative;
+    max-width: 1080px;
+    min-height: 330px;
+    margin: 0 auto;
+    padding: 64px 32px 56px;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 620px;
+  }
+
+  .hero-resonator {
+    position: absolute;
+    z-index: 0;
+    top: 4px;
+    left: clamp(180px, 21vw, 250px);
+    width: clamp(500px, 50vw, 590px);
+    pointer-events: none;
+    opacity: 0.86;
+  }
+
+  .resonator-wrap,
+  .resonator-wrap :global(svg) {
+    width: 100%;
+    height: auto;
+  }
+
+  .hero-tag {
+    margin-bottom: 28px;
+  }
+
+  .hero-title {
+    max-width: 600px;
+    margin: 0 0 14px;
+    font-size: clamp(48px, 6vw, 64px);
+    font-weight: 500;
+    line-height: 1.05;
+  }
+
+  .hero-subtitle {
+    max-width: 400px;
+    margin-bottom: 32px;
+    color: var(--color-text-secondary);
+    font-size: 17px;
+    font-style: italic;
+  }
+
+  .hero-meta {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+  }
+
+  .instrument-label {
+    color: var(--color-text-primary);
+    font-size: 15px;
+    letter-spacing: 0;
+  }
+
   @media (max-width: 820px) {
-    .fan-wrap {
-      transform: scale(0.7);
-      transform-origin: top right;
-      opacity: 0.7;
+    .track-hero {
+      min-height: 310px;
+      padding: 56px 28px 48px;
+    }
+
+    .hero-resonator {
+      top: 18px;
+      left: 31%;
+      width: 470px;
+      opacity: 0.5;
     }
   }
+
   @media (max-width: 540px) {
-    .fan-wrap {
-      transform: scale(0.5);
-      opacity: 0.55;
+    .track-hero {
+      min-height: 310px;
+      padding: 50px 24px 44px;
+    }
+
+    .hero-resonator {
+      top: 28px;
+      left: 13%;
+      width: 380px;
+      opacity: 0.32;
+    }
+
+    .hero-title {
+      font-size: 42px;
+    }
+
+    .hero-meta {
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 10px 12px;
     }
   }
 </style>

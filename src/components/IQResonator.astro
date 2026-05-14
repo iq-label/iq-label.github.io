@@ -2,232 +2,339 @@
 /**
  * IQ Resonator
  *
- * Brand-anchored hero for Label Q.
+ * Brand-anchored hero instrument for IQ.
  *
- * Concept: The operator IQ (I Question) is the resonance source.
- * - I slides diagonally into position
- * - Q is drawn (stroke-dashoffset) in the middle while I moves
- * - 6 horizontal "strings" fade in (guitar-like fretboard)
- * - Red pulse appears at center of Q (the resonance point)
- * - Sound waves emanate continuously from Q outward
- *
- * Total intro: ~1.7s. After that, continuous resonance loop.
+ * Concept:
+ * - The I slides in diagonally like a guitar neck.
+ * - Q settles into the middle as the resonant body.
+ * - Fine strings are laid over that shared axis.
+ * - Slow, quiet waves emanate from the Q body.
  */
 
 interface Props {
   size?: number;
 }
 
-const { size = 380 } = Astro.props;
+const { size = 540 } = Astro.props;
 ---
 
 <svg
+  class="iq-resonator"
   width={size}
-  height={size * 0.65}
-  viewBox="0 0 400 260"
+  height={Math.round(size * 0.54)}
+  viewBox="0 0 560 300"
   fill="none"
-  aria-label="IQ Resonator — 진동의 source"
+  aria-label="IQ resonator guitar mark"
   role="img"
-  style="filter: drop-shadow(0 0 24px rgba(232, 72, 82, 0.08));"
 >
-  <!-- Sparse decorative stars in surrounding space -->
-  <g fill="#F2EAD8" opacity="0.3">
-    <circle cx="50" cy="35" r="0.8" />
-    <circle cx="370" cy="50" r="0.7" />
-    <circle cx="385" cy="220" r="0.8" />
-    <circle cx="25" cy="195" r="0.7" />
-    <circle cx="155" cy="28" r="0.6" />
-    <circle cx="285" cy="35" r="0.5" />
-    <circle cx="75" cy="225" r="0.6" />
-    <circle cx="340" cy="240" r="0.6" />
-    <circle cx="15" cy="105" r="0.5" />
-    <circle cx="388" cy="155" r="0.5" />
+  <defs>
+    <radialGradient id="iq-body-glow" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="rgba(232, 72, 82, 0.28)" />
+      <stop offset="54%" stop-color="rgba(232, 72, 82, 0.07)" />
+      <stop offset="100%" stop-color="rgba(232, 72, 82, 0)" />
+    </radialGradient>
+    <linearGradient id="iq-string-light" x1="160" y1="50" x2="360" y2="250" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F2EAD8" stop-opacity="0.08" />
+      <stop offset="42%" stop-color="#F2EAD8" stop-opacity="0.78" />
+      <stop offset="58%" stop-color="#F2EAD8" stop-opacity="0.78" />
+      <stop offset="100%" stop-color="#F2EAD8" stop-opacity="0.08" />
+    </linearGradient>
+    <filter id="iq-source-glow" x="-120%" y="-120%" width="340%" height="340%">
+      <feGaussianBlur stdDeviation="5" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <g class="iq-dust" fill="#F2EAD8">
+    <circle cx="84" cy="52" r="0.8" />
+    <circle cx="452" cy="46" r="0.7" />
+    <circle cx="516" cy="216" r="0.8" />
+    <circle cx="32" cy="224" r="0.7" />
+    <circle cx="176" cy="28" r="0.6" />
+    <circle cx="390" cy="252" r="0.6" />
+    <circle cx="42" cy="132" r="0.5" />
+    <circle cx="532" cy="132" r="0.5" />
   </g>
 
-  <!-- ============================================ -->
-  <!-- Sound waves: continuous, emanate from Q -->
-  <!-- ============================================ -->
-  <g>
-    <circle cx="230" cy="130" r="20" fill="none" stroke="#E84852" stroke-width="0.7" opacity="0">
-      <animate
-        attributeName="r"
-        values="20;180"
-        dur="4.5s"
-        begin="1.7s"
-        repeatCount="indefinite"
-      />
-      <animate
-        attributeName="opacity"
-        values="0.7;0"
-        dur="4.5s"
-        begin="1.7s"
-        repeatCount="indefinite"
-      />
-    </circle>
-    <circle cx="230" cy="130" r="20" fill="none" stroke="#E84852" stroke-width="0.6" opacity="0">
-      <animate
-        attributeName="r"
-        values="20;180"
-        dur="4.5s"
-        begin="3.2s"
-        repeatCount="indefinite"
-      />
-      <animate
-        attributeName="opacity"
-        values="0.7;0"
-        dur="4.5s"
-        begin="3.2s"
-        repeatCount="indefinite"
-      />
-    </circle>
-    <circle cx="230" cy="130" r="20" fill="none" stroke="#E84852" stroke-width="0.5" opacity="0">
-      <animate
-        attributeName="r"
-        values="20;180"
-        dur="4.5s"
-        begin="4.7s"
-        repeatCount="indefinite"
-      />
-      <animate
-        attributeName="opacity"
-        values="0.7;0"
-        dur="4.5s"
-        begin="4.7s"
-        repeatCount="indefinite"
-      />
-    </circle>
+  <g class="iq-waves" stroke="#E84852" fill="none">
+    <circle class="iq-wave iq-wave-1" cx="310" cy="150" r="54" stroke-width="0.72" />
+    <circle class="iq-wave iq-wave-2" cx="310" cy="150" r="54" stroke-width="0.58" />
+    <circle class="iq-wave iq-wave-3" cx="310" cy="150" r="54" stroke-width="0.46" />
   </g>
 
-  <!-- ============================================ -->
-  <!-- Guitar strings: 6 horizontal lines, staggered fade-in -->
-  <!-- ============================================ -->
-  <g stroke="#F2EAD8" stroke-linecap="round">
-    <line x1="50" y1="108" x2="390" y2="108" stroke-width="0.35" opacity="0">
-      <animate attributeName="opacity" values="0;0.3" dur="0.5s" begin="1.0s" fill="freeze" />
-    </line>
-    <line x1="50" y1="117" x2="390" y2="117" stroke-width="0.4" opacity="0">
-      <animate attributeName="opacity" values="0;0.35" dur="0.5s" begin="1.1s" fill="freeze" />
-    </line>
-    <line x1="50" y1="125" x2="390" y2="125" stroke-width="0.5" opacity="0">
-      <animate attributeName="opacity" values="0;0.4" dur="0.5s" begin="1.2s" fill="freeze" />
-    </line>
-    <line x1="50" y1="134" x2="390" y2="134" stroke-width="0.5" opacity="0">
-      <animate attributeName="opacity" values="0;0.4" dur="0.5s" begin="1.3s" fill="freeze" />
-    </line>
-    <line x1="50" y1="143" x2="390" y2="143" stroke-width="0.4" opacity="0">
-      <animate attributeName="opacity" values="0;0.35" dur="0.5s" begin="1.4s" fill="freeze" />
-    </line>
-    <line x1="50" y1="152" x2="390" y2="152" stroke-width="0.35" opacity="0">
-      <animate attributeName="opacity" values="0;0.3" dur="0.5s" begin="1.5s" fill="freeze" />
-    </line>
+  <circle class="iq-body-aura" cx="310" cy="150" r="92" fill="url(#iq-body-glow)" />
+
+  <g class="iq-i-sweep" stroke="#F2EAD8" stroke-linecap="round">
+    <line class="iq-i-spine" x1="310" y1="42" x2="310" y2="258" stroke-width="8" />
+    <line x1="274" y1="42" x2="346" y2="42" stroke-width="6" />
+    <line x1="274" y1="258" x2="346" y2="258" stroke-width="6" />
   </g>
 
-  <!-- ============================================ -->
-  <!-- Letter I: slides in diagonally from upper-left -->
-  <!-- ============================================ -->
-  <g opacity="0">
-    <line
-      x1="175"
-      y1="98"
-      x2="175"
-      y2="162"
-      stroke="#F2EAD8"
-      stroke-width="4"
-      stroke-linecap="round"
-    />
-    <line
-      x1="163"
-      y1="98"
-      x2="187"
-      y2="98"
-      stroke="#F2EAD8"
-      stroke-width="3"
-      stroke-linecap="round"
-    />
-    <line
-      x1="163"
-      y1="162"
-      x2="187"
-      y2="162"
-      stroke="#F2EAD8"
-      stroke-width="3"
-      stroke-linecap="round"
-    />
-
-    <animateTransform
-      attributeName="transform"
-      type="translate"
-      from="-55,-40"
-      to="0,0"
-      dur="0.9s"
-      begin="0.1s"
-      fill="freeze"
-    />
-    <animate attributeName="opacity" values="0;1" dur="0.9s" begin="0.1s" fill="freeze" />
+  <g class="iq-q" stroke="#F2EAD8" stroke-linecap="round">
+    <circle class="iq-q-ring" cx="310" cy="150" r="55" stroke-width="7" />
+    <line class="iq-q-tail" x1="348" y1="190" x2="382" y2="224" stroke-width="7" />
   </g>
 
-  <!-- ============================================ -->
-  <!-- Letter Q: drawn via stroke-dashoffset while I is still moving -->
-  <!-- ============================================ -->
-  <g>
-    <circle
-      cx="230"
-      cy="130"
-      r="24"
-      fill="none"
-      stroke="#F2EAD8"
-      stroke-width="3.5"
-      stroke-linecap="round"
-      stroke-dasharray="151"
-      stroke-dashoffset="151"
-    >
-      <animate
-        attributeName="stroke-dashoffset"
-        values="151;0"
-        dur="0.9s"
-        begin="0.6s"
-        fill="freeze"
-      />
-    </circle>
-    <line
-      x1="244"
-      y1="148"
-      x2="260"
-      y2="166"
-      stroke="#F2EAD8"
-      stroke-width="3.5"
-      stroke-linecap="round"
-      stroke-dasharray="25"
-      stroke-dashoffset="25"
-    >
-      <animate
-        attributeName="stroke-dashoffset"
-        values="25;0"
-        dur="0.3s"
-        begin="1.4s"
-        fill="freeze"
-      />
-    </line>
+  <g class="iq-frets" stroke="#D4B27A" stroke-linecap="round">
+    <line x1="288" y1="82" x2="332" y2="82" />
+    <line x1="288" y1="110" x2="332" y2="110" />
+    <line x1="288" y1="218" x2="332" y2="218" />
+    <line x1="288" y1="246" x2="332" y2="246" />
   </g>
 
-  <!-- ============================================ -->
-  <!-- Red pulse at center of Q (resonance source) -->
-  <!-- ============================================ -->
-  <circle
-    cx="230"
-    cy="130"
-    r="3"
-    fill="#E84852"
-    opacity="0"
-    style="filter: drop-shadow(0 0 8px rgba(232,72,82,0.85));"
-  >
-    <animate attributeName="opacity" values="0;0.95" dur="0.4s" begin="1.5s" fill="freeze" />
-    <animate
-      attributeName="r"
-      values="2.8;3.6;2.8"
-      dur="1.8s"
-      begin="1.9s"
-      repeatCount="indefinite"
-    />
-  </circle>
+  <g class="iq-strings" stroke="url(#iq-string-light)" stroke-linecap="round">
+    <line class="iq-string string-1" x1="294" y1="54" x2="294" y2="246" stroke-width="0.62" />
+    <line class="iq-string string-2" x1="302" y1="50" x2="302" y2="250" stroke-width="0.72" />
+    <line class="iq-string string-3" x1="310" y1="48" x2="310" y2="252" stroke-width="0.86" />
+    <line class="iq-string string-4" x1="318" y1="50" x2="318" y2="250" stroke-width="0.72" />
+    <line class="iq-string string-5" x1="326" y1="54" x2="326" y2="246" stroke-width="0.62" />
+  </g>
+
+  <circle class="iq-source" cx="310" cy="150" r="4.2" fill="#E84852" filter="url(#iq-source-glow)" />
 </svg>
+
+<style>
+  .iq-resonator {
+    display: block;
+    overflow: visible;
+    filter: drop-shadow(0 0 28px rgba(232, 72, 82, 0.08));
+  }
+
+  .iq-dust {
+    opacity: 0.22;
+  }
+
+  .iq-body-aura {
+    opacity: 0;
+    animation: iq-body-bloom 1.35s ease-out 1.25s forwards;
+  }
+
+  .iq-wave {
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: iq-wave-spread 10.8s cubic-bezier(0.16, 0.72, 0.22, 1) infinite;
+  }
+
+  .iq-wave-1 {
+    animation-delay: 2.25s;
+  }
+
+  .iq-wave-2 {
+    animation-delay: 5.85s;
+  }
+
+  .iq-wave-3 {
+    animation-delay: 9.45s;
+  }
+
+  .iq-i-sweep,
+  .iq-frets,
+  .iq-strings {
+    transform-box: view-box;
+    transform-origin: 310px 150px;
+  }
+
+  .iq-i-sweep {
+    opacity: 0;
+    animation: iq-i-slide 1.35s cubic-bezier(0.19, 0.88, 0.28, 1) 0.08s forwards;
+  }
+
+  .iq-i-spine {
+    opacity: 0.92;
+  }
+
+  .iq-q-ring {
+    fill: rgba(13, 10, 24, 0.18);
+    stroke-dasharray: 346;
+    stroke-dashoffset: 346;
+    animation: iq-q-draw 1.16s cubic-bezier(0.42, 0, 0.08, 1) 0.72s forwards;
+  }
+
+  .iq-q-tail {
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: iq-q-draw 0.5s ease-out 1.68s forwards;
+  }
+
+  .iq-frets {
+    opacity: 0;
+    stroke-width: 0.78;
+    animation: iq-frets-in 0.9s ease-out 1.35s forwards;
+  }
+
+  .iq-strings {
+    opacity: 0.98;
+    animation: iq-strings-settle 0.95s cubic-bezier(0.2, 0.82, 0.22, 1) 1.18s both;
+  }
+
+  .iq-string {
+    stroke-dasharray: 206;
+    stroke-dashoffset: 206;
+    animation: iq-string-draw 1.28s ease-out forwards;
+  }
+
+  .string-1 {
+    animation-delay: 1.28s;
+  }
+
+  .string-2 {
+    animation-delay: 1.36s;
+  }
+
+  .string-3 {
+    animation-delay: 1.44s;
+  }
+
+  .string-4 {
+    animation-delay: 1.52s;
+  }
+
+  .string-5 {
+    animation-delay: 1.6s;
+  }
+
+  .iq-source {
+    opacity: 0;
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: iq-source-breathe 3.2s ease-in-out 2.05s infinite;
+  }
+
+  @keyframes iq-i-slide {
+    0% {
+      opacity: 0;
+      transform: translate(-74px, -42px) rotate(-26deg);
+    }
+    62% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 1;
+      transform: translate(0, 0) rotate(-18deg);
+    }
+  }
+
+  @keyframes iq-q-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes iq-frets-in {
+    from {
+      opacity: 0;
+      transform: translate(-8px, -4px) rotate(-18deg);
+    }
+    to {
+      opacity: 0.44;
+      transform: translate(0, 0) rotate(-18deg);
+    }
+  }
+
+  @keyframes iq-strings-settle {
+    from {
+      transform: translate(-14px, -8px) rotate(-20deg);
+      opacity: 0;
+    }
+    to {
+      transform: translate(0, 0) rotate(-18deg);
+      opacity: 0.98;
+    }
+  }
+
+  @keyframes iq-string-draw {
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes iq-body-bloom {
+    from {
+      opacity: 0;
+      transform: scale(0.72);
+      transform-origin: 310px 150px;
+    }
+    to {
+      opacity: 0.9;
+      transform: scale(1);
+      transform-origin: 310px 150px;
+    }
+  }
+
+  @keyframes iq-source-breathe {
+    0%, 100% {
+      opacity: 0.72;
+      transform: scale(0.94);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.24);
+    }
+  }
+
+  @keyframes iq-wave-spread {
+    0% {
+      opacity: 0;
+      transform: scale(0.64);
+      stroke-width: 0.9px;
+    }
+    12% {
+      opacity: 0.34;
+    }
+    62% {
+      opacity: 0.12;
+    }
+    100% {
+      opacity: 0;
+      transform: scale(4.25);
+      stroke-width: 0.22px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .iq-body-aura,
+    .iq-i-sweep,
+    .iq-q-ring,
+    .iq-q-tail,
+    .iq-frets,
+    .iq-strings,
+    .iq-string,
+    .iq-source,
+    .iq-wave {
+      animation: none;
+    }
+
+    .iq-body-aura {
+      opacity: 0.75;
+    }
+
+    .iq-i-sweep,
+    .iq-frets,
+    .iq-strings {
+      transform: rotate(-18deg);
+      opacity: 1;
+    }
+
+    .iq-frets {
+      opacity: 0.44;
+    }
+
+    .iq-q-ring,
+    .iq-q-tail,
+    .iq-string {
+      stroke-dashoffset: 0;
+    }
+
+    .iq-source {
+      opacity: 0.86;
+    }
+
+    .iq-wave {
+      display: none;
+    }
+  }
+</style>
