@@ -151,3 +151,9 @@ p {
   0%, 100% { opacity: 0.3; }
   50% { opacity: 0.95; }
 }
+
+@media (max-width: 640px) {
+  body {
+    padding-bottom: 112px;
+  }
+}

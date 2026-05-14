@@ -2,14 +2,11 @@
 // 하단 고정 오디오 플레이어. 우주 보라-검정 위에 cream 텍스트 + 단청 적색 progress.
 ---
 
-<div
-  id="player"
-  style="position: fixed; left: 0; right: 0; bottom: 0; background: rgba(10, 6, 18, 0.92); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 0.5px solid var(--color-border-strong); color: var(--color-text-primary); padding: 12px 24px; display: flex; align-items: center; gap: 14px; z-index: 100; font-family: var(--font-sans);"
->
+<div id="player" class="audio-player">
   <button
     id="player-play"
     aria-label="Play / Pause"
-    style="background: transparent; border: none; padding: 0; color: var(--color-text-primary); cursor: pointer; display: flex; align-items: center;"
+    class="player-control"
   >
     <svg id="player-icon-play" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"
       ><path d="M8 5v14l11-7z"></path></svg
@@ -24,41 +21,141 @@
       ><path d="M6 5h4v14H6zM14 5h4v14h-4z"></path></svg
     >
   </button>
-  <div style="flex: 1; min-width: 0;">
-    <div
-      id="player-title"
-      class="serif"
-      style="font-size: 13px; font-weight: 500; color: var(--color-text-primary);"
-    >
+  <div class="player-now">
+    <div id="player-title" class="serif player-title">
       —
     </div>
-    <div
-      id="player-meta"
-      class="mono"
-      style="font-size: 10px; color: var(--color-text-faded);"
-    >
+    <div id="player-meta" class="mono player-meta">
       no track loaded
     </div>
   </div>
-  <div
-    id="player-track"
-    style="flex: 2; height: 2px; background: var(--color-surface-3); position: relative; min-width: 80px; cursor: pointer;"
-  >
-    <div
-      id="player-progress"
-      style="position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: var(--color-dancheong-red); box-shadow: 0 0 10px rgba(232, 72, 82, 0.6);"
-    >
-    </div>
+  <div id="player-track" class="player-track">
+    <div id="player-progress" class="player-progress"></div>
   </div>
-  <div
-    id="player-time"
-    class="mono"
-    style="font-size: 10px; color: var(--color-text-faded); white-space: nowrap;"
-  >
+  <div id="player-time" class="mono player-time">
     0:00 / 0:00
   </div>
   <audio id="player-audio" preload="metadata"></audio>
 </div>
+
+<style>
+  .audio-player {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    display: grid;
+    grid-template-columns: 34px minmax(120px, 1fr) minmax(140px, 2fr) auto;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 24px;
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    background:
+      linear-gradient(90deg, rgba(232, 72, 82, 0.08), transparent 26%),
+      rgba(10, 6, 18, 0.92);
+    border-top: 0.5px solid var(--color-border-strong);
+    box-shadow: 0 -18px 50px rgba(10, 6, 18, 0.42);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  .player-control {
+    width: 34px;
+    height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: var(--color-text-primary);
+    background: rgba(242, 234, 216, 0.03);
+    border: 0.5px solid rgba(242, 234, 216, 0.26);
+    border-radius: 50%;
+  }
+
+  .player-control:hover {
+    color: var(--color-bg);
+    background: var(--color-text-primary);
+    box-shadow: 0 0 24px rgba(242, 234, 216, 0.16);
+  }
+
+  .player-now {
+    min-width: 0;
+  }
+
+  .player-title {
+    overflow: hidden;
+    color: var(--color-text-primary);
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.25;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .player-meta {
+    overflow: hidden;
+    color: var(--color-text-faded);
+    font-size: 10px;
+    line-height: 1.45;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .player-track {
+    position: relative;
+    min-width: 80px;
+    height: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    background: rgba(242, 234, 216, 0.12);
+    border-radius: 999px;
+  }
+
+  .player-progress {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0%;
+    background: var(--color-dancheong-red);
+    box-shadow: 0 0 14px rgba(232, 72, 82, 0.68);
+  }
+
+  .player-time {
+    color: var(--color-text-faded);
+    font-size: 10px;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .audio-player {
+      grid-template-columns: 34px minmax(0, 1fr) auto;
+      grid-template-areas:
+        "control now time"
+        "track track track";
+      gap: 8px 12px;
+      padding: 10px 20px 12px;
+    }
+
+    .player-control {
+      grid-area: control;
+    }
+
+    .player-now {
+      grid-area: now;
+    }
+
+    .player-track {
+      grid-area: track;
+      min-width: 0;
+    }
+
+    .player-time {
+      grid-area: time;
+      font-size: 9.5px;
+    }
+  }
+</style>
 
 <script is:inline>
   (function () {
