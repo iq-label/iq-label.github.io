@@ -29,6 +29,11 @@ const instrumentLabel = track.fusion_with_label || track.fusion_with;
 ---
 
 <section class="track-hero">
+  <canvas class="hero-soundfield" data-track-id={track.id} aria-hidden="true"></canvas>
+  <div class="hero-core" aria-hidden="true"></div>
+  <div class="hero-ring hero-ring-1" aria-hidden="true"></div>
+  <div class="hero-ring hero-ring-2" aria-hidden="true"></div>
+
   <div class="hero-resonator" aria-hidden="true">
     <div class="resonator-wrap">
       <IQResonator size={540} />
@@ -65,28 +70,76 @@ const instrumentLabel = track.fusion_with_label || track.fusion_with;
   .track-hero {
     position: relative;
     max-width: 1080px;
-    min-height: 330px;
+    min-height: min(72vh, 680px);
     margin: 0 auto;
-    padding: 64px 32px 56px;
+    padding: clamp(74px, 8vw, 112px) 32px clamp(80px, 9vw, 118px);
     overflow: hidden;
     isolation: isolate;
   }
 
+  .hero-soundfield {
+    position: absolute;
+    inset: 0;
+    z-index: -3;
+    width: 100%;
+    height: 100%;
+    opacity: 0.82;
+  }
+
+  .hero-core {
+    position: absolute;
+    z-index: -2;
+    top: 50%;
+    left: 58%;
+    width: min(680px, 62vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at center, rgba(242, 234, 216, 0.13), rgba(232, 72, 82, 0.12) 14%, rgba(232, 72, 82, 0.045) 34%, transparent 68%);
+    filter: blur(3px);
+    transform: translate(-50%, -50%);
+    animation: hero-core-breathe 7s ease-in-out infinite;
+  }
+
+  .hero-ring {
+    position: absolute;
+    z-index: -2;
+    top: 50%;
+    left: 58%;
+    width: min(520px, 52vw);
+    aspect-ratio: 1;
+    border: 1px solid rgba(232, 72, 82, 0.12);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    box-shadow:
+      0 0 50px rgba(232, 72, 82, 0.07),
+      inset 0 0 70px rgba(212, 178, 122, 0.035);
+    animation: hero-ring-expand 8.5s ease-out infinite;
+  }
+
+  .hero-ring-2 {
+    width: min(840px, 76vw);
+    border-color: rgba(212, 178, 122, 0.09);
+    animation-delay: -4.25s;
+  }
+
   .hero-content {
     position: relative;
-    z-index: 1;
+    z-index: 2;
     max-width: 620px;
-    padding-top: 58px;
+    padding-top: 18px;
   }
 
   .hero-resonator {
     position: absolute;
-    z-index: 0;
-    top: 4px;
-    left: clamp(180px, 21vw, 250px);
-    width: clamp(500px, 50vw, 590px);
+    z-index: 1;
+    top: clamp(74px, 8vw, 104px);
+    left: clamp(260px, 36vw, 430px);
+    width: clamp(500px, 45vw, 620px);
     pointer-events: none;
-    opacity: 0.86;
+    opacity: 0.9;
   }
 
   .resonator-wrap,
@@ -109,6 +162,31 @@ const instrumentLabel = track.fusion_with_label || track.fusion_with;
     color: var(--color-text-secondary);
     font-size: 17px;
     font-style: italic;
+  }
+
+  @keyframes hero-core-breathe {
+    0%, 100% {
+      opacity: 0.62;
+      transform: translate(-50%, -50%) scale(0.96);
+    }
+    50% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.08);
+    }
+  }
+
+  @keyframes hero-ring-expand {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.7);
+    }
+    18% {
+      opacity: 0.72;
+    }
+    100% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(1.42);
+    }
   }
 
   .hero-meta {
@@ -190,37 +268,37 @@ const instrumentLabel = track.fusion_with_label || track.fusion_with;
 
   @media (max-width: 820px) {
     .track-hero {
-      min-height: 310px;
-      padding: 56px 28px 48px;
+      min-height: 560px;
+      padding: 68px 28px 58px;
     }
 
     .hero-content {
-      padding-top: 48px;
+      padding-top: 26px;
     }
 
     .hero-resonator {
-      top: 18px;
-      left: 31%;
+      top: 112px;
+      left: 34%;
       width: 470px;
-      opacity: 0.5;
+      opacity: 0.42;
     }
   }
 
   @media (max-width: 540px) {
     .track-hero {
-      min-height: 310px;
-      padding: 50px 24px 44px;
+      min-height: 540px;
+      padding: 62px 24px 54px;
     }
 
     .hero-content {
-      padding-top: 42px;
+      padding-top: 46px;
     }
 
     .hero-resonator {
-      top: 28px;
-      left: 13%;
+      top: 136px;
+      left: 14%;
       width: 380px;
-      opacity: 0.32;
+      opacity: 0.28;
     }
 
     .hero-title {
@@ -233,4 +311,122 @@ const instrumentLabel = track.fusion_with_label || track.fusion_with;
       gap: 10px 12px;
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-core,
+    .hero-ring,
+    .hero-play::before {
+      animation: none;
+    }
+
+    .hero-soundfield {
+      display: none;
+    }
+  }
 </style>
+
+<script>
+  function initHeroSoundfields() {
+    const canvases = document.querySelectorAll('.hero-soundfield');
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    canvases.forEach((canvas) => {
+      if (canvas.dataset.ready === 'true') return;
+      canvas.dataset.ready = 'true';
+
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      let width = 0;
+      let height = 0;
+      let mouseX = 0;
+      let mouseY = 0;
+      let targetX = 0;
+      let targetY = 0;
+      let particles = [];
+
+      function random(seed) {
+        const x = Math.sin(seed * 999) * 10000;
+        return x - Math.floor(x);
+      }
+
+      function resize() {
+        const rect = canvas.getBoundingClientRect();
+        width = rect.width;
+        height = rect.height;
+        canvas.width = Math.max(1, Math.floor(width * dpr));
+        canvas.height = Math.max(1, Math.floor(height * dpr));
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const count = Math.min(130, Math.max(56, Math.floor((width * height) / 7800)));
+        particles = Array.from({ length: count }, (_, index) => {
+          const depth = 0.25 + random(index + 3) * 0.9;
+          return {
+            x: random(index + 11) * width,
+            y: random(index + 29) * height,
+            depth,
+            radius: 0.45 + depth * 1.25,
+            phase: random(index + 47) * Math.PI * 2,
+            speed: 0.006 + random(index + 71) * 0.016,
+            drift: (random(index + 93) - 0.5) * 0.08,
+            warm: random(index + 111) > 0.55,
+          };
+        });
+      }
+
+      function draw() {
+        mouseX += (targetX - mouseX) * 0.055;
+        mouseY += (targetY - mouseY) * 0.055;
+        ctx.clearRect(0, 0, width, height);
+        ctx.globalCompositeOperation = 'lighter';
+
+        const cx = width / 2;
+        const cy = height / 2;
+        const moveX = ((mouseX || cx) - cx) / Math.max(cx, 1);
+        const moveY = ((mouseY || cy) - cy) / Math.max(cy, 1);
+
+        particles.forEach((particle) => {
+          particle.phase += particle.speed;
+          particle.x += particle.drift;
+          if (particle.x < -8) particle.x = width + 8;
+          if (particle.x > width + 8) particle.x = -8;
+
+          const px = particle.x + moveX * particle.depth * 18;
+          const py = particle.y + moveY * particle.depth * 14 + Math.sin(particle.phase) * particle.depth * 5;
+          const pulse = (Math.sin(particle.phase * 1.6) + 1) / 2;
+          const alpha = 0.28 + pulse * 0.55;
+          const color = particle.warm ? '232,72,82' : '242,234,216';
+
+          const gradient = ctx.createRadialGradient(px, py, 0, px, py, particle.radius * 5.8);
+          gradient.addColorStop(0, `rgba(${color},${alpha})`);
+          gradient.addColorStop(0.45, `rgba(${color},${alpha * 0.18})`);
+          gradient.addColorStop(1, `rgba(${color},0)`);
+
+          ctx.fillStyle = gradient;
+          ctx.beginPath();
+          ctx.arc(px, py, particle.radius * 5.8, 0, Math.PI * 2);
+          ctx.fill();
+        });
+
+        requestAnimationFrame(draw);
+      }
+
+      canvas.closest('.track-hero')?.addEventListener('mousemove', (event) => {
+        const rect = canvas.getBoundingClientRect();
+        targetX = event.clientX - rect.left;
+        targetY = event.clientY - rect.top;
+      });
+
+      resize();
+      window.addEventListener('resize', resize);
+      draw();
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initHeroSoundfields);
+  } else {
+    initHeroSoundfields();
+  }
+</script>

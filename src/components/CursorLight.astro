@@ -1,0 +1,93 @@
+---
+/**
+ * Mouse-following stage light for Label Q.
+ *
+ * Inspired by the reference site's cursor glow, tuned to Label Q's
+ * dancheong red / moonlight / gold palette.
+ */
+---
+
+<div id="cursor-light" class="cursor-light" aria-hidden="true"></div>
+
+<style>
+  .cursor-light {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    width: 380px;
+    height: 380px;
+    pointer-events: none;
+    border-radius: 50%;
+    opacity: 0;
+    filter: blur(18px);
+    transform: translate(-50%, -50%);
+    transition: opacity 0.35s ease, background 0.45s ease;
+    will-change: transform;
+    background:
+      radial-gradient(circle at 38% 50%, rgba(232, 72, 82, 0.16), rgba(232, 72, 82, 0.04) 38%, transparent 72%),
+      radial-gradient(circle at 62% 54%, rgba(212, 178, 122, 0.12), rgba(212, 178, 122, 0.035) 36%, transparent 72%);
+  }
+
+  .cursor-light.active {
+    opacity: 1;
+  }
+
+  .cursor-light.is-hot {
+    background:
+      radial-gradient(circle at center, rgba(232, 72, 82, 0.24), rgba(232, 72, 82, 0.07) 42%, transparent 74%),
+      radial-gradient(circle at 65% 35%, rgba(242, 234, 216, 0.14), transparent 54%);
+  }
+
+  @media (max-width: 768px), (prefers-reduced-motion: reduce) {
+    .cursor-light {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  function initCursorLight() {
+    const light = document.getElementById('cursor-light');
+    if (!light) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(max-width: 768px)').matches) return;
+    if (light.dataset.ready === 'true') return;
+    light.dataset.ready = 'true';
+
+    let targetX = window.innerWidth / 2;
+    let targetY = window.innerHeight / 2;
+    let currentX = targetX;
+    let currentY = targetY;
+
+    function animate() {
+      currentX += (targetX - currentX) * 0.12;
+      currentY += (targetY - currentY) * 0.12;
+      light.style.transform = `translate(${currentX}px, ${currentY}px) translate(-50%, -50%)`;
+      requestAnimationFrame(animate);
+    }
+
+    document.addEventListener('mousemove', (event) => {
+      targetX = event.clientX;
+      targetY = event.clientY;
+      light.classList.add('active');
+
+      const hotTarget = event.target.closest?.(
+        '.instr-card, .hero-play, .track-play, .nav-link, .atlas-cta, button, a',
+      );
+      light.classList.toggle('is-hot', Boolean(hotTarget));
+    });
+
+    document.addEventListener('mouseleave', () => {
+      light.classList.remove('active', 'is-hot');
+    });
+
+    animate();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCursorLight);
+  } else {
+    initCursorLight();
+  }
+</script>

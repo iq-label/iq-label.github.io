@@ -54,16 +54,18 @@ const totalTracks = instruments.reduce((sum, i) => sum + i.track_count, 0);
 
   <section class="catalog-section">
     <div class="section-header">
-      <div class="tag">CURRENT · 현재 카탈로그</div>
-      <div class="region-line">
-        <span class="region-en">{focusRegion.label}</span>
-        <span class="region-dot">·</span>
-        <span class="region-ko">{focusRegion.label_ko}</span>
-        <span class="region-flags">
-          {focusRegion.flag_codes.map((code) => (
-            <span class="flag" title={countryNamesKo[code] || code}>{countryToFlag(code)}</span>
-          ))}
-        </span>
+      <div class="section-copy">
+        <div class="tag">CURRENT · 현재 카탈로그</div>
+        <div class="region-line">
+          <span class="region-en">{focusRegion.label}</span>
+          <span class="region-dot">·</span>
+          <span class="region-ko">{focusRegion.label_ko}</span>
+          <span class="region-flags">
+            {focusRegion.flag_codes.map((code) => (
+              <span class="flag" title={countryNamesKo[code] || code}>{countryToFlag(code)}</span>
+            ))}
+          </span>
+        </div>
       </div>
       <p class="meta-line">
         {focusRegion.instruments.length} instruments
@@ -124,19 +126,40 @@ const totalTracks = instruments.reduce((sum, i) => sum + i.track_count, 0);
   .catalog-section {
     max-width: 1080px;
     margin: 0 auto;
-    padding: 32px 32px 18px;
+    padding: 38px 32px 34px;
     position: relative;
     z-index: 1;
   }
 
   .section-header {
-    margin-bottom: 28px;
-    padding-top: 14px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 30px;
+    padding: 22px 0 18px;
     border-top: 0.5px solid var(--color-border);
+    border-bottom: 0.5px solid rgba(61, 52, 80, 0.52);
+  }
+
+  .section-header::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -1px;
+    width: 136px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-dancheong-red), transparent);
+    box-shadow: 0 0 18px rgba(232, 72, 82, 0.34);
   }
 
   .section-header .tag {
     margin-bottom: 14px;
+  }
+
+  .section-copy {
+    min-width: 0;
   }
 
   .region-line {
@@ -204,11 +227,13 @@ const totalTracks = instruments.reduce((sum, i) => sum + i.track_count, 0);
     min-height: 150px;
     padding: 17px 16px 15px;
     overflow: hidden;
-    border: 0.5px solid var(--color-border);
+    border: 1px solid rgba(61, 52, 80, 0.72);
     background:
       linear-gradient(180deg, rgba(242, 234, 216, 0.035), transparent 44%),
       rgba(22, 18, 31, 0.5);
-    box-shadow: inset 0 1px 0 rgba(242, 234, 216, 0.025);
+    box-shadow:
+      inset 0 1px 0 rgba(242, 234, 216, 0.035),
+      0 16px 40px rgba(10, 6, 18, 0.12);
     backdrop-filter: blur(5px);
     transition: border-color 0.2s, background 0.2s, box-shadow 0.2s, transform 0.2s, opacity 0.2s;
     display: block;
@@ -256,9 +281,10 @@ const totalTracks = instruments.reduce((sum, i) => sum + i.track_count, 0);
   .instr-active:focus-visible {
     border-color: var(--color-dancheong-red);
     box-shadow:
+      0 14px 42px rgba(232, 72, 82, 0.12),
       0 0 24px rgba(232, 72, 82, 0.15),
       inset 0 0 34px rgba(232, 72, 82, 0.04);
-    transform: translateY(-1px);
+    transform: translateY(-3px);
     outline: none;
   }
 
@@ -383,26 +409,52 @@ const totalTracks = instruments.reduce((sum, i) => sum + i.track_count, 0);
   }
 
   .atlas-cta-row {
-    margin-top: 28px;
-    text-align: center;
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-end;
   }
 
   .atlas-cta {
+    position: relative;
     font-family: var(--font-mono);
     font-size: 12px;
     color: var(--color-text-secondary);
-    letter-spacing: 0.16em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    border: 1px solid var(--color-border-strong);
-    padding: 12px 24px;
+    border: 1px solid rgba(184, 171, 148, 0.36);
+    background: rgba(22, 18, 31, 0.48);
+    padding: 13px 24px;
+    overflow: hidden;
     transition: all 0.2s;
     display: inline-block;
+  }
+
+  .atlas-cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(110deg, transparent, rgba(232, 72, 82, 0.18), transparent);
+    transform: translateX(-120%);
+    opacity: 0;
+    transition: opacity 0.2s;
   }
 
   .atlas-cta:hover {
     color: var(--color-dancheong-red);
     border-color: var(--color-dancheong-red);
     box-shadow: 0 0 24px rgba(232, 72, 82, 0.15);
+    transform: translateY(-1px);
+  }
+
+  .atlas-cta:hover::before {
+    opacity: 1;
+    animation: atlas-sweep 1.8s ease-in-out infinite;
+  }
+
+  @keyframes atlas-sweep {
+    to {
+      transform: translateX(120%);
+    }
   }
 
   @keyframes card-sound-ring {
@@ -430,6 +482,14 @@ const totalTracks = instruments.reduce((sum, i) => sum + i.track_count, 0);
   @media (max-width: 540px) {
     .catalog-section {
       padding: 28px 20px 18px;
+    }
+
+    .section-header {
+      display: block;
+    }
+
+    .section-header .meta-line {
+      margin-top: 10px;
     }
 
     .region-line {
@@ -461,6 +521,7 @@ const totalTracks = instruments.reduce((sum, i) => sum + i.track_count, 0);
     .atlas-cta {
       width: 100%;
       padding-inline: 16px;
+      text-align: center;
       font-size: 11px;
       letter-spacing: 0.1em;
     }
