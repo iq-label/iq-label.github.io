@@ -7,13 +7,14 @@ import GayageumIcon from './icons/GayageumIcon.astro';
 import HaegeumIcon from './icons/HaegeumIcon.astro';
 import DansoIcon from './icons/DansoIcon.astro';
 import GeomungoIcon from './icons/GeomungoIcon.astro';
+import { withBase } from '../lib/base';
 
 interface Props {
   track: Track;
 }
 
 const { track } = Astro.props;
-const trackJson = JSON.stringify(track);
+const trackJson = JSON.stringify({ ...track, audio_url: withBase(track.audio_url) });
 
 const iconMap: Record<string, any> = {
   janggu: JanguIcon,
@@ -40,7 +41,7 @@ const instrumentLabel = track.fusion_with_label || track.fusion_with;
 
   <div class="hero-content">
     <h1 class="serif glow-cream hero-title">
-      <a href={`/track/${track.id}`}>{track.title_ko}</a>
+      <a href={withBase(`/track/${track.id}`)}>{track.title_ko}</a>
     </h1>
 
     <div class="hero-subtitle">

@@ -10,6 +10,7 @@ import HaegeumIcon from '../../components/icons/HaegeumIcon.astro';
 import DansoIcon from '../../components/icons/DansoIcon.astro';
 import GeomungoIcon from '../../components/icons/GeomungoIcon.astro';
 import tracksData from '../../data/tracks.json';
+import { withBase } from '../../lib/base';
 import type { Track } from '../../types';
 
 export async function getStaticPaths() {
@@ -25,7 +26,7 @@ interface Props {
 }
 
 const { track } = Astro.props;
-const trackJson = JSON.stringify(track);
+const trackJson = JSON.stringify({ ...track, audio_url: withBase(track.audio_url) });
 
 const iconMap: Record<string, any> = {
   janggu: JanguIcon,
@@ -40,7 +41,7 @@ const InstrumentIcon = iconMap[track.fusion_instrument] || JanguIcon;
 
 <Layout title={`${track.title_ko} — Label Q`}>
   <article class="track-detail">
-    <a class="mono track-back" href={`/genre/${track.genre}`}>
+    <a class="mono track-back" href={withBase(`/genre/${track.genre}`)}>
       ← {track.genre}
     </a>
 

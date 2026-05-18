@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import regionsData from '../../data/regions.json';
 import tracksData from '../../data/tracks.json';
 import { countryToFlag, countryNamesKo } from '../../lib/countries';
+import { withBase } from '../../lib/base';
 import type { Track } from '../../types';
 
 const tracks = tracksData as Track[];
@@ -31,7 +32,7 @@ const regions = regionsData.map((region) => {
     <div class="region-grid">
       {regions.map((region) => (
         <a
-          href={`/region/${region.slug}`}
+          href={withBase(`/region/${region.slug}`)}
           class={`region-card ${region.isActive ? 'region-active' : 'region-coming'}`}
         >
           <div class="region-num">{region.number}</div>

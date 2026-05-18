@@ -6,6 +6,7 @@ import GayageumIcon from './icons/GayageumIcon.astro';
 import HaegeumIcon from './icons/HaegeumIcon.astro';
 import DansoIcon from './icons/DansoIcon.astro';
 import GeomungoIcon from './icons/GeomungoIcon.astro';
+import { withBase } from '../lib/base';
 
 interface Props {
   genres: Genre[];
@@ -46,7 +47,7 @@ const iconMap: Record<string, any> = {
         const isActive = g.status === 'active';
         return isActive ? (
           <a
-            href={`/genre/${g.slug}`}
+            href={withBase(`/genre/${g.slug}`)}
             class="genre-card-active"
             style="background: rgba(22, 18, 31, 0.6); backdrop-filter: blur(4px); border: 0.5px solid var(--color-border-strong); padding: 18px 16px; position: relative; display: block; transition: all 0.2s;"
           >

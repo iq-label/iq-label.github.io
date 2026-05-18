@@ -3,6 +3,7 @@ import Layout from '../../layouts/Layout.astro';
 import regionsData from '../../data/regions.json';
 import tracksData from '../../data/tracks.json';
 import { countryToFlag, countryNamesKo } from '../../lib/countries';
+import { withBase } from '../../lib/base';
 import type { Track } from '../../types';
 
 export async function getStaticPaths() {
@@ -34,7 +35,7 @@ const regionIsActive = activeCount > 0;
   <article class="region-page">
 
     <header class="page-header">
-      <a href="/genres" class="back-link">← Atlas</a>
+      <a href={withBase('/genres')} class="back-link">← Atlas</a>
       <div class="tag">REGION {region.number} · 지역</div>
       <h1 class="serif glow-cream">
         <span class="region-en">{region.label}</span>
@@ -90,7 +91,7 @@ const regionIsActive = activeCount > 0;
         );
 
         return inst.track ? (
-          <a href={`/track/${inst.track.id}`} class="instr-card instr-active">
+          <a href={withBase(`/track/${inst.track.id}`)} class="instr-card instr-active">
             {cardContent}
           </a>
         ) : (
