@@ -1,6 +1,7 @@
 ---
 import QMark from './QMark.astro';
 import DancheongLine from './DancheongLine.astro';
+import { withBase, stripBase } from '../lib/base';
 
 const navItems = [
   { href: '/genres', labelKo: '장르', labelEn: 'genres', match: ['/genres', '/genre', '/region'] },
@@ -8,12 +9,12 @@ const navItems = [
   { href: '/about', labelKo: '소개', labelEn: 'about', match: ['/about'] },
 ];
 
-const currentPath = Astro.url.pathname;
+const currentPath = stripBase(Astro.url.pathname);
 ---
 
 <header class="site-header">
   <div class="site-header-inner">
-    <a href="/" class="brand-mark">
+    <a href={withBase('/')} class="brand-mark">
       <span class="brand-symbol">
         <QMark size={52} />
       </span>
@@ -27,7 +28,7 @@ const currentPath = Astro.url.pathname;
       {
         navItems.map((item) => (
           <a
-            href={item.href}
+            href={withBase(item.href)}
             class={`nav-link ${item.match.some((path) => currentPath.startsWith(path)) ? 'is-active' : ''}`}
           >
             <span class="serif nav-ko">{item.labelKo}</span>

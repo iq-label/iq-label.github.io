@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { withBase } from '../lib/base';
 ---
 
 <Layout title="About · Label Q">
@@ -24,7 +25,7 @@ import Layout from '../layouts/Layout.astro';
         <dd>2026 · Seoul · Cosmos</dd>
 
         <dt>현재 카탈로그</dt>
-        <dd>1 track · <a href="/">전체 보기 →</a></dd>
+        <dd>1 track · <a href={withBase('/')}>전체 보기 →</a></dd>
       </dl>
     </section>
 
@@ -52,7 +53,7 @@ import Layout from '../layouts/Layout.astro';
       <ul class="contact-list">
         <li>
           <span class="contact-label">GitHub Org</span>
-          <a href="https://github.com/iq-label" target="_blank" rel="noopener">github.com/iq-label</a>
+          <a href="https://github.com/iq-universe" target="_blank" rel="noopener">github.com/iq-universe</a>
         </li>
         <li>
           <span class="contact-label">Operator</span>
@@ -92,7 +93,7 @@ import Layout from '../layouts/Layout.astro';
 
     <section class="block">
       <div class="block-tag">◈ READ MORE</div>
-      <a href="/manifesto" class="cta-link">MANIFESTO 읽기 →</a>
+      <a href={withBase('/manifesto')} class="cta-link">MANIFESTO 읽기 →</a>
     </section>
 
   </article>

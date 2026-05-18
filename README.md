@@ -12,7 +12,7 @@ npm install
 npm run dev
 ```
 
-http://localhost:4321 에서 확인.
+http://localhost:4321/iq-label/ 에서 확인 (base path).
 
 ## Build
 

@@ -8,6 +8,7 @@ import DansoIcon from '../../components/icons/DansoIcon.astro';
 import GeomungoIcon from '../../components/icons/GeomungoIcon.astro';
 import tracksData from '../../data/tracks.json';
 import genresData from '../../data/genres.json';
+import { withBase } from '../../lib/base';
 import type { Track, Genre } from '../../types';
 
 export async function getStaticPaths() {
@@ -66,7 +67,7 @@ const Icon = iconMap[genre.instrument] || JanguIcon;
         <div style="display: flex; flex-direction: column;">
           {tracks.map((track, i) => (
             <a
-              href={`/track/${track.id}`}
+              href={withBase(`/track/${track.id}`)}
               style={`display: flex; align-items: center; gap: 16px; padding: 20px 0; border-top: 0.5px solid var(--color-border); ${i === tracks.length - 1 ? 'border-bottom: 0.5px solid var(--color-border);' : ''}`}
             >
               <span class="mono" style="font-size: 11px; color: var(--color-text-faded); min-width: 32px; letter-spacing: 0.1em;">

@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { withBase } from '../lib/base';
 ---
 
 <Layout title="Manifesto · Label Q">
@@ -139,7 +140,7 @@ GLOBAL          hang · glass harmonica · theremin · waterphone</pre>
         조합으로만 존재한다.
       </blockquote>
 
-      <a href="/" class="cta-link">CATALOGUE 듣기 →</a>
+      <a href={withBase('/')} class="cta-link">CATALOGUE 듣기 →</a>
     </section>
 
   </article>

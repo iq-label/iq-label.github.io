@@ -10,6 +10,7 @@ import GeomungoIcon from '../components/icons/GeomungoIcon.astro';
 import tracksData from '../data/tracks.json';
 import regionsData from '../data/regions.json';
 import { countryToFlag, countryNamesKo } from '../lib/countries';
+import { withBase } from '../lib/base';
 import type { Track } from '../types';
 
 const tracks = tracksData as Track[];
@@ -104,7 +105,7 @@ const totalTracks = instruments.reduce((sum, i) => sum + i.track_count, 0);
         );
 
         return inst.track ? (
-          <a href={`/track/${inst.track.id}`} class="instr-card instr-active">
+          <a href={withBase(`/track/${inst.track.id}`)} class="instr-card instr-active">
             {cardContent}
           </a>
         ) : (
@@ -116,7 +117,7 @@ const totalTracks = instruments.reduce((sum, i) => sum + i.track_count, 0);
     </div>
 
     <div class="atlas-cta-row">
-      <a href="/genres" class="atlas-cta">전체 8개 지역 보기 → Atlas</a>
+      <a href={withBase('/genres')} class="atlas-cta">전체 8개 지역 보기 → Atlas</a>
     </div>
   </section>
 
